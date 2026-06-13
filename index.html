@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DR BONDAN | Downloads Portal</title>
+    <!-- ربط ملف التنسيق -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- شاشة التحميل الأولية -->
+    <div id="preloader">
+        <div class="preloader-logo">DR BONDAN</div>
+        <div class="preloader-bar"><div class="preloader-progress"></div></div>
+        <p data-lang="preloader_text">جارٍ تهيئة البيئة الآمنة...</p>
+    </div>
+
+    <!-- Canvas الجسيمات -->
+    <canvas id="particleCanvas"></canvas>
+    <!-- Scanlines -->
+    <div class="scanlines"></div>
+    <!-- شبكة خلفية -->
+    <div class="grid-bg"></div>
+
+    <!-- الحاوية الرئيسية -->
+    <div class="main-container" id="mainContainer">
+        <!-- الهيدر -->
+        <header class="header">
+            <div class="logo-wrapper">
+                <a href="#home" class="logo-link" title="DR BONDAN">
+                    <h1 class="logo glitch" data-text="DR BONDAN">DR BONDAN</h1>
+                </a>
+                <span class="skull">💀</span>
+            </div>
+            <p class="tagline" data-lang="tagline">[ SECURE DOWNLOAD PORTAL // بوابة التحميل الآمنة ]</p>
+            <div class="status-bar">
+                <span class="status-dot online"></span><span data-lang="server_status">SERVER: ONLINE</span>
+                <span class="separator">|</span><span>ENCRYPTED: AES-256</span>
+                <span class="separator">|</span><span id="currentTime">--</span>
+                <!-- مفتاح اللغة -->
+                <span class="separator">|</span>
+                <button id="langToggle" class="lang-btn" title="English / العربية">🌐 EN</button>
+            </div>
+            <nav class="breadcrumb" id="breadcrumbNav">
+                <a href="#home" class="crumb-link">🏠 <span data-lang="home_crumb">الرئيسية</span></a>
+            </nav>
+        </header>
+
+        <!-- الصفحة الرئيسية -->
+        <div class="page-view active" id="page-home">
+            <!-- الطرفية -->
+            <section class="terminal-section">
+                <div class="terminal-header">
+                    <span class="term-btn red"></span><span class="term-btn yellow"></span><span class="term-btn green"></span>
+                    <span class="term-title">root@drbondan:~# terminal</span>
+                </div>
+                <div class="terminal-body" id="terminalBody">
+                    <p class="term-line"><span class="prompt">root@drbondan:~#</span> <span class="typed-text" id="typedLine1"></span><span class="cursor">█</span></p>
+                    <p class="term-line" id="line2" style="opacity:0;"><span class="prompt">root@drbondan:~#</span> <span data-lang="term_line2">جاري فهرسة التطبيقات المتاحة...</span></p>
+                    <p class="term-line success" id="line3" style="opacity:0;"><span class="prompt">root@drbondan:~#</span> <span data-lang="term_line3">✓ تم العثور على تطبيقات جاهزة للتحميل.</span></p>
+                </div>
+            </section>
+
+            <!-- شريط البحث والتصفية -->
+            <div class="filter-bar">
+                <input type="text" id="searchInput" data-lang-placeholder="search_placeholder" placeholder="🔍 ابحث عن تطبيق...">
+                <select id="sortSelect">
+                    <option value="default" data-lang="sort_default">ترتيب افتراضي</option>
+                    <option value="name" data-lang="sort_name">الاسم (أ-ي)</option>
+                    <option value="rating" data-lang="sort_rating">التقييم (تنازلي)</option>
+                    <option value="size" data-lang="sort_size">الحجم (تصاعدي)</option>
+                </select>
+            </div>
+
+            <!-- شبكة التطبيقات -->
+            <section class="apps-section">
+                <h2 class="section-title"><span class="bracket">[</span> <span data-lang="apps_section_title">التطبيقات المتاحة</span> <span class="bracket">]</span></h2>
+                <div class="apps-grid" id="appsGrid"></div>
+                <div class="no-results" id="noResults" style="display:none;" data-lang="no_results">⚠️ لا توجد تطبيقات مطابقة لبحثك.</div>
+            </section>
+        </div>
+
+        <!-- صفحة التفاصيل -->
+        <div class="page-view" id="page-detail">
+            <div class="detail-container" id="detailContainer"></div>
+        </div>
+
+        <!-- صفحة التحميل -->
+        <div class="page-view" id="page-download">
+            <div class="download-page-container" id="downloadPageContainer"></div>
+        </div>
+
+        <!-- الفوتر -->
+        <footer class="footer">
+            <p>© <span id="year"></span> DR BONDAN. <span data-lang="footer_rights">جميع الحقوق محفوظة.</span></p>
+            <p class="footer-sub" data-lang="footer_sub">لا يُسمح بإعادة التوزيع دون إذن // SECURE LINE // ALL RIGHTS RESERVED</p>
+        </footer>
+    </div>
+
+    <!-- إشعار Toast -->
+    <div id="toast" class="toast" data-lang="toast_default">تم بنجاح</div>
+
+    <!-- ربط ملف الجافاسكريبت -->
+    <script src="script.js"></script>
+</body>
+</html>
