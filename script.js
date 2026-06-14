@@ -7,7 +7,7 @@
 const translations = {
     ar: {
         preloader_text: 'جارٍ تهيئة البيئة الآمنة...',
-        tagline: '[ SECURE DOWNLOAD PORTAL // بوابة التحميل الآمنة ]',
+        tagline: '[ بوابة التحميل الآمنة ]',
         server_status: 'SERVER: ONLINE',
         home_crumb: 'الرئيسية',
         term_line2: 'جاري فهرسة التطبيقات المتاحة...',
@@ -81,7 +81,7 @@ const appConfig = [
     {
         id: 1,
         name: 'DR BONDAN Tool Pro',
-        imageUrl: 'https://picsum.photos/seed/drbondan1/600/400',
+        imageUrl: 'https://dr-app-an56.onrender.com/image/IMG_20260614_131700_956.jpg',
         version: 'v3.2.1',
         size: '48.5 MB',
         category: { ar: 'أدوات الاختراق', en: 'Penetration Testing' },
