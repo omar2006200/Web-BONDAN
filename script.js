@@ -45,7 +45,7 @@ const translations = {
         home_crumb: 'Home',
         term_line2: 'Indexing available applications...',
         term_line3: '✓ Applications ready for download.',
-        search_placeholder: '🔍 Search apps...',
+        search_placeholder: 'Search apps...',
         sort_default: 'Default order',
         sort_name: 'Name (A-Z)',
         sort_rating: 'Rating (High-Low)',
@@ -80,11 +80,11 @@ let currentLang = 'ar'; // اللغة الافتراضية العربية
 const appConfig = [
     {
         id: 1,
-        name: 'DR BONDAN Tool Pro',
+        name: 'DR HACKS 32-bit v4.4',
         imageUrl: 'https://dr-app-an56.onrender.com/image/IMG_20260614_131700_956.jpg',
         version: 'v3.2.1',
         size: '48.5 MB',
-        category: { ar: 'أدوات الاختراق', en: 'Penetration Testing' },
+        category: { ar: 'بوبجي', en: 'PUBG' },
         shortDesc: { ar: 'أداة اختبار الاختراق المتقدمة – نسخة احترافية.', en: 'Advanced penetration testing tool – professional edition.' },
         fullDesc: {
             ar: 'أداة DR BONDAN Tool Pro هي الحزمة المتكاملة لاختبار الاختراق الأخلاقي. تجمع بين ماسح الثغرات، ومحلل الشبكات، وأداة فحص المنافذ في واجهة موحدة.',
@@ -97,9 +97,10 @@ const appConfig = [
         requirements: { ar: 'Windows 10/11 | Linux Kernel 5.x+ | RAM 4GB | مساحة 200MB', en: 'Windows 10/11 | Linux Kernel 5.x+ | RAM 4GB | Space 200MB' },
         rating: '4.9',
         downloadLinks: [
-            { label:'الخادم الرئيسي', url:'https://example.com/dl/dr-bondan-tool-pro-v3.2.1.zip', speed:'⚡ فائقة', location:'🇩🇪 Frankfurt', recommended:true, hash:'MD5: a1b2c3...' },
-            { label:'الرابط البديل 2', url:'https://mirror2.example.com/dl/dr-bondan-tool-pro-v3.2.1.zip', speed:'🚀 عالية', location:'🇺🇸 New York', recommended:false, hash:'SHA256: 7f8e...' },
-            { label:'الرابط الاحتياطي 3', url:'https://backup.example.com/dl/dr-bondan-tool-pro-v3.2.1.zip', speed:'🛡️ آمن', location:'🇸🇬 Singapore', recommended:false, hash:'SHA1: 3f4e...' }
+            { label:'كورية', url:'https://example.com/dl/dr-bondan-tool-pro-v3.2.1.zip', speed:'⚡ فائقة', location:'🇩🇪 Frankfurt', recommended:true, hash:'MD5: a1b2c3...' },
+            { label:'ملف كورية', url:'https://mirror2.example.com/dl/dr-bondan-tool-pro-v3.2.1.zip', speed:'🚀 عالية', location:'🇺🇸 New York', recommended:false, hash:'SHA256: 7f8e...' },
+            { label:'تايوانيه', url:'https://mirror2.example.com/dl/dr-bondan-tool-pro-v3.2.1.zip', speed:'🛡️ آمن', location:'🇸🇬 Singapore', recommended:false, hash:'SHA1: 3f4e...' },
+            { label:'ملف تايوانيه', url:'https://mirror2.example.com/dl/dr-bondan-tool-pro-v3.2.1.zip', speed:'🛡️ آمن', location:'🇸🇬 Singapore', recommended:false, hash:'SHA1: 3f4e...' }
         ]
     },
     {
