@@ -190,6 +190,18 @@ body {
 .file-info-row { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid #0f0f0f; font-size:0.7rem; font-family:var(--font-mono); color:#888; }
 .file-info-row span:last-child { color:#ccc; }
 
+/* صورة السيرفر المخصصة */
+.server-img {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto 12px;
+    border-radius: 8px;
+    background: #0a0a0a;
+    border: 1px solid #1a0000;
+}
+
 /* Toast */
 .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--blood-red); color:#fff; padding:10px 25px; border-radius:30px; font-family:var(--font-mono); font-size:0.7rem; box-shadow:0 0 25px rgba(179,0,0,0.6); z-index:100; opacity:0; transition:opacity 0.3s ease; pointer-events:none; }
 .toast.show { opacity:1; }
