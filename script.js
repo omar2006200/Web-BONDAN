@@ -97,10 +97,10 @@ const appConfig = [
         requirements: { ar: 'Windows 10/11 | Linux Kernel 5.x+ | RAM 4GB | مساحة 200MB', en: 'Windows 10/11 | Linux Kernel 5.x+ | RAM 4GB | Space 200MB' },
         rating: '4.9',
         downloadLinks: [
-            { label:'كورية', url:'https://example.com/dl/dr-bondan-tool-pro-v3.2.1.zip', speed:'⚡ فائقة', location:'🇩🇪 Frankfurt', recommended:true, hash:'MD5: a1b2c3...' },
-            { label:'ملف كورية', url:'https://mirror2.example.com/dl/dr-bondan-tool-pro-v3.2.1.zip', speed:'🚀 عالية', location:'🇺🇸 New York', recommended:false, hash:'SHA256: 7f8e...' },
-            { label:'تايوانيه', url:'https://mirror2.example.com/dl/dr-bondan-tool-pro-v3.2.1.zip', speed:'🛡️ آمن', location:'🇸🇬 Singapore', recommended:false, hash:'SHA1: 3f4e...' },
-            { label:'ملف تايوانيه', url:'https://mirror2.example.com/dl/dr-bondan-tool-pro-v3.2.1.zip', speed:'🛡️ آمن', location:'🇸🇬 Singapore', recommended:false, hash:'SHA1: 3f4e...' }
+            { label:'كورية', url:'https://example.com/dl/dr-bondan-tool-pro-v3.2.1.zip', speed:'⚡ فائقة', location:'🇩🇪 Frankfurt', recommended:true, hash:'MD5: a1b2c3...', image:'https://picsum.photos/seed/server1/100/100' },
+            { label:'ملف كورية', url:'https://mirror2.example.com/dl/dr-bondan-tool-pro-v3.2.1.zip', speed:'🚀 عالية', location:'🇺🇸 New York', recommended:false, hash:'SHA256: 7f8e...', image:'https://picsum.photos/seed/server2/100/100' },
+            { label:'تايوانيه', url:'https://mirror2.example.com/dl/dr-bondan-tool-pro-v3.2.1.zip', speed:'🛡️ آمن', location:'🇸🇬 Singapore', recommended:false, hash:'SHA1: 3f4e...', image:'' },  // صورة فارغة = سيستخدم الإيموجي
+            { label:'ملف تايوانيه', url:'https://mirror2.example.com/dl/dr-bondan-tool-pro-v3.2.1.zip', speed:'🛡️ آمن', location:'🇸🇬 Singapore', recommended:false, hash:'SHA1: 3f4e...', image:'https://picsum.photos/seed/server1/100/100' } // تكرار نفس الصورة
         ]
     },
     {
@@ -116,7 +116,7 @@ const appConfig = [
         requirements: { ar: 'Windows 10+ | RAM 8GB | مساحة 500MB', en: 'Windows 10+ | RAM 8GB | Space 500MB' },
         rating: '4.7',
         downloadLinks: [
-            { label:'الخادم الرئيسي', url:'https://example.com/dl/shadow-scanner-x.zip', speed:'⚡ فائقة', location:'🇩🇪 Frankfurt', recommended:true, hash:'MD5: f1e2...' },
+            { label:'الخادم الرئيسي', url:'https://example.com/dl/shadow-scanner-x.zip', speed:'⚡ فائقة', location:'🇩🇪 Frankfurt', recommended:true, hash:'MD5: f1e2...' },  // بدون صورة = أيقونة افتراضية
             { label:'الرابط البديل 2', url:'https://mirror2.example.com/dl/shadow-scanner-x.zip', speed:'🚀 عالية', location:'🇺🇸 New York', recommended:false, hash:'SHA256: 9a8b...' }
         ]
     }
@@ -190,26 +190,21 @@ document.getElementById('year').textContent = new Date().getFullYear();
 // ============================================================
 function applyLanguage(lang) {
     currentLang = lang;
-    // تحديث اتجاه الصفحة
     document.documentElement.lang = lang;
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-    // تحديث زر اللغة
     document.getElementById('langToggle').textContent = lang === 'ar' ? '🌐 EN' : '🌐 AR';
-    // تحديث النصوص الثابتة
     document.querySelectorAll('[data-lang]').forEach(el => {
         const key = el.getAttribute('data-lang');
         if (translations[lang][key]) {
             el.textContent = translations[lang][key];
         }
     });
-    // تحديث النص المؤقت (placeholder)
     document.querySelectorAll('[data-lang-placeholder]').forEach(el => {
         const key = el.getAttribute('data-lang-placeholder');
         if (translations[lang][key]) {
             el.placeholder = translations[lang][key];
         }
     });
-    // تحديث صفحة التطبيقات والتفاصيل والتحميل إذا كانت معروضة
     if (document.getElementById('page-home').classList.contains('active')) {
         renderAppCards();
     } else if (document.getElementById('page-detail').classList.contains('active') && currentAppId) {
@@ -219,7 +214,6 @@ function applyLanguage(lang) {
         const app = appConfig.find(a => a.id === currentAppId);
         if (app) renderDownloadPage(app);
     }
-    // تحديث breadcrumb
     updateBreadcrumbByHash();
 }
 
@@ -412,7 +406,7 @@ function renderDetailPage(app) {
 }
 
 // ============================================================
-// صفحة التحميل (بدون زر نسخ نهائياً)
+// صفحة التحميل (مع دعم صور السيرفر المخصصة)
 // ============================================================
 function renderDownloadPage(app) {
     const container = document.getElementById('downloadPageContainer');
@@ -444,8 +438,14 @@ function renderDownloadPage(app) {
     app.downloadLinks.forEach((link, idx) => {
         const card = document.createElement('div');
         card.className = `server-card ${link.recommended ? 'recommended' : ''}`;
+
+        // إذا وُجد رابط صورة مخصص نعرضها، وإلا نعرض الإيموجي القديم
+        const iconHTML = link.image
+            ? `<img src="${link.image}" alt="${link.label}" class="server-img" />`
+            : `<span class="server-icon">${idx === 0 ? '🖥️' : idx === 1 ? '🌐' : '☁️'}</span>`;
+
         card.innerHTML = `
-            <span class="server-icon">${idx === 0 ? '🖥️' : idx === 1 ? '🌐' : '☁️'}</span>
+            ${iconHTML}
             <h4 class="server-name">${link.label}</h4>
             <p class="server-speed">${link.speed}</p>
             <p class="server-location">${link.location}</p>
@@ -489,12 +489,9 @@ function handleHashChange() {
 window.addEventListener('hashchange', handleHashChange);
 
 document.addEventListener('DOMContentLoaded', () => {
-    // مستمعي البحث والتصفية
     document.getElementById('searchInput')?.addEventListener('input', applyFilters);
     document.getElementById('sortSelect')?.addEventListener('change', applyFilters);
-    // تطبيق اللغة الافتراضية
     applyLanguage('ar');
-    // عرض التطبيقات
     filteredApps = [...appConfig];
     renderAppCards();
     initTerminalTyping();
