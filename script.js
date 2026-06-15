@@ -97,10 +97,10 @@ const appConfig = [
         requirements: { ar: 'Windows 10/11 | Linux Kernel 5.x+ | RAM 4GB | مساحة 200MB', en: 'Windows 10/11 | Linux Kernel 5.x+ | RAM 4GB | Space 200MB' },
         rating: '4.9',
         downloadLinks: [
-            { label:'كورية', url:'https://example.com/dl/dr-bondan-tool-pro-v3.2.1.zip', speed:'⚡ فائقة', location:'🇩🇪 Frankfurt', recommended:true, hash:'MD5: a1b2c3...', image:'https://picsum.photos/seed/server1/100/100' },
-            { label:'ملف كورية', url:'https://mirror2.example.com/dl/dr-bondan-tool-pro-v3.2.1.zip', speed:'🚀 عالية', location:'🇺🇸 New York', recommended:false, hash:'SHA256: 7f8e...', image:'https://picsum.photos/seed/server2/100/100' },
-            { label:'تايوانيه', url:'https://mirror2.example.com/dl/dr-bondan-tool-pro-v3.2.1.zip', speed:'🛡️ آمن', location:'🇸🇬 Singapore', recommended:false, hash:'SHA1: 3f4e...', image:'' },  // صورة فارغة = سيستخدم الإيموجي
-            { label:'ملف تايوانيه', url:'https://mirror2.example.com/dl/dr-bondan-tool-pro-v3.2.1.zip', speed:'🛡️ آمن', location:'🇸🇬 Singapore', recommended:false, hash:'SHA1: 3f4e...', image:'https://picsum.photos/seed/server1/100/100' } // تكرار نفس الصورة
+            { label:'كورية', url:'https://example.com/dl/dr-bondan-tool-pro-v3.2.1.zip', speed:'⚡ فائقة', location:'🇩🇪 Frankfurt', recommended:true, hash:'MD5: a1b2c3...', image:'https://dr-app-an56.onrender.com/image/apk.jpg' },
+            { label:'ملف كورية', url:'https://mirror2.example.com/dl/dr-bondan-tool-pro-v3.2.1.zip', speed:'🚀 عالية', location:'🇺🇸 New York', recommended:false, hash:'SHA256: 7f8e...', image:'https://dr-app-an56.onrender.com/image/obb.jpg' },
+            { label:'تايوانيه', url:'https://mirror2.example.com/dl/dr-bondan-tool-pro-v3.2.1.zip', speed:'🛡️ آمن', location:'🇸🇬 Singapore', recommended:false, hash:'SHA1: 3f4e...', image:'https://dr-app-an56.onrender.com/image/apk.jpg' },  // صورة فارغة = سيستخدم الإيموجي
+            { label:'ملف تايوانيه', url:'https://mirror2.example.com/dl/dr-bondan-tool-pro-v3.2.1.zip', speed:'🛡️ آمن', location:'🇸🇬 Singapore', recommended:false, hash:'SHA1: 3f4e...', image:'https://dr-app-an56.onrender.com/image/obb.jpg' } // تكرار نفس الصورة
         ]
     },
     {
