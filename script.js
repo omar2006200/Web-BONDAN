@@ -280,32 +280,46 @@ function navigateToDownload(appId) {
 // الطرفية (Typing Effect)
 // ============================================================
 function initTerminalTyping() {
-    const line1 = document.getElementById('typedLine1');
-    if (!line1) return;
-    line1.textContent = '';
-    const text = currentLang === 'ar' ? 'تهيئة الاتصال الآمن... التحقق من الهوية...' : 'Establishing secure connection... verifying identity...';
-    let i = 0;
-    function type() {
-        if (i < text.length) {
-            line1.textContent += text.charAt(i);
-            i++;
-            setTimeout(type, 35 + Math.random() * 28);
-        } else {
-            setTimeout(() => {
-                const l2 = document.getElementById('line2');
-                if (l2) l2.style.opacity = '1';
-            }, 250);
-            setTimeout(() => {
-                const l3 = document.getElementById('line3');
-                if (l3) l3.style.opacity = '1';
-                const cursor = document.querySelector('.cursor');
-                if (cursor) cursor.style.display = 'none';
-            }, 650);
-        }
-    }
-    setTimeout(type, 500);
-}
+  // إلغاء أي جلسة كتابة سابقة لتجنب التداخل
+  if (initTerminalTyping._timeout) {
+    clearTimeout(initTerminalTyping._timeout);
+    initTerminalTyping._timeout = null;
+  }
 
+  const line1 = document.getElementById('typedLine1');
+  if (!line1) return;
+  line1.textContent = '';
+
+  const text = currentLang === 'ar'
+    ? 'تهيئة الاتصال الآمن... التحقق من الهوية...'
+    : 'Establishing secure connection... verifying identity...';
+
+  let i = 0;
+  const type = () => {
+    if (i < text.length) {
+      line1.textContent += text.charAt(i);
+      i++;
+      initTerminalTyping._timeout = setTimeout(type, 35 + Math.random() * 28);
+    } else {
+      initTerminalTyping._timeout = null;
+      // إظهار السطر الثاني بعد 250 مللي ثانية
+      setTimeout(() => {
+        const l2 = document.getElementById('line2');
+        if (l2) l2.style.opacity = '1';
+      }, 250);
+
+      // إظهار السطر الثالث وإخفاء المؤشر بعد 650 مللي ثانية
+      setTimeout(() => {
+        const l3 = document.getElementById('line3');
+        if (l3) l3.style.opacity = '1';
+        const cursor = document.querySelector('.cursor');
+        if (cursor) cursor.style.display = 'none';
+      }, 650);
+    }
+  };
+
+  initTerminalTyping._timeout = setTimeout(type, 500);
+}
 // ============================================================
 // البحث والتصفية
 // ============================================================
