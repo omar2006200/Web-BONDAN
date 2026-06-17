@@ -281,6 +281,8 @@ function navigateToDownload(appId) {
 // ============================================================
 function initTerminalTyping() {
   // إلغاء أي جلسة كتابة سابقة لتجنب التداخل
+function initTerminalTyping() {
+  // إلغاء أي جلسة كتابة سابقة
   if (initTerminalTyping._timeout) {
     clearTimeout(initTerminalTyping._timeout);
     initTerminalTyping._timeout = null;
@@ -288,52 +290,69 @@ function initTerminalTyping() {
 
   const line1 = document.getElementById('typedLine1');
   if (!line1) return;
-  line1.textContent = ''; // نبدأ بفارغ
+  line1.textContent = ''; // تفريغ السطر
 
-  // النص الكامل حسب اللغة
+  // اختر النص حسب اللغة
   const text = currentLang === 'ar'
-    ? 'تهيئة الاتصال الآمن... التحقق من الهوية...'
-    : 'Establishing secure connection... verifying identity...';
+    ? 'DR → تطبيقات معدلة بشكل احترافي وآمن ومحسّنة الأداء | الحالة: تم التحقق منها وآمنة 🔒'
+    : 'DR → Secure, optimized, and professionally modified applications | Status: VERIFIED & SAFE 🔒';
 
-  // تحديد الأجزاء التي ستظهر باللون الأخضر (فهارس البداية والنهاية حصرية)
-  const greenSegments = currentLang === 'ar'
+  // تحويل النص إلى مصفوفة من الأحرف الحقيقية (بما فيها الإيموجي كعنصر واحد)
+  const chars = Array.from(text);
+
+  // تعريف أجزاء التلوين (segments) حسب اللغة – بالفهارس داخل chars
+  const segments = currentLang === 'ar'
     ? [
-        { start: 0, end: 19, green: true },   // "تهيئة الاتصال الآمن"
-        { start: 19, end: 23, green: false }, // "... " (ثلاث نقاط ومسافة)
-        { start: 23, end: 39, green: true },  // "التحقق من الهوية"
-        { start: 39, end: 42, green: false }  // "..."
+        { start: 0,  end: 5,  color: '#00e5ff' },  // "DR → "
+        { start: 51, end: 54, color: '#888888' },  // " | "  (فاصل)
+        { start: 54, end: 61, color: '#888888' },  // "الحالة:"
+        { start: 62, end: 82, color: '#00ff88' },  // "تم التحقق منها وآمنة"
+        { start: 82, end: 84, color: '#00ff88' }   // " 🔒" (مسافة + إيموجي)
       ]
     : [
-        { start: 0, end: 30, green: true },   // "Establishing secure connection"
-        { start: 30, end: 34, green: false }, // "... "
-        { start: 34, end: 52, green: true },  // "verifying identity"
-        { start: 52, end: 55, green: false }  // "..."
+        { start: 0,  end: 5,  color: '#00e5ff' },  // "DR → "
+        { start: 61, end: 64, color: '#888888' },  // " | "  (فاصل)
+        { start: 64, end: 71, color: '#888888' },  // "Status:"
+        { start: 72, end: 87, color: '#00ff88' },  // "VERIFIED & SAFE"
+        { start: 87, end: 89, color: '#00ff88' }   // " 🔒" (مسافة + إيموجي)
       ];
 
-  let i = 0;
-  const type = () => {
-    if (i < text.length) {
-      i++;
-      // بناء HTML التراكمي مع تلوين الكلمات المحددة فقط
-      let html = '';
-      for (const seg of greenSegments) {
-        if (seg.start >= i) break;                // ما وصلنا لهذا الجزء بعد
-        const partEnd = Math.min(seg.end, i);     // نهاية الجزء المطبوع حتى الآن
-        const part = text.substring(seg.start, partEnd);
-        if (seg.green) {
-          html += `<span style="color: green;">${part}</span>`;
-        } else {
-          html += part; // النقاط والمسافات تبقى بلونها الافتراضي
-        }
+  let i = 0; // عداد الأحرف المطبوعة
+
+  // دالة مساعدة: تولّد HTML ملوناً حتى المؤشر i
+  const buildHTML = (upto) => {
+    let html = '';
+    let idx = 0;
+    // التأكد من ترتيب segments تصاعدياً
+    const sorted = [...segments].sort((a, b) => a.start - b.start);
+    for (const seg of sorted) {
+      if (seg.start >= upto) break;
+      // إضافة النص غير الملون قبل هذا الجزء
+      if (idx < seg.start) {
+        html += chars.slice(idx, Math.min(seg.start, upto)).join('');
       }
-      line1.innerHTML = html; // عرض النص الملون
-      
+      // إضافة الجزء الملون
+      const segEnd = Math.min(seg.end, upto);
+      if (seg.start < segEnd) {
+        html += `<span style="color:${seg.color}">${chars.slice(seg.start, segEnd).join('')}</span>`;
+      }
+      idx = seg.end;
+    }
+    // إضافة أي نص متبقٍّ بعد آخر segment
+    if (idx < upto) {
+      html += chars.slice(idx, upto).join('');
+    }
+    return html;
+  };
+
+  const type = () => {
+    if (i < chars.length) {
+      i++;
+      line1.innerHTML = buildHTML(i); // عرض النص الملون تراكمياً
       initTerminalTyping._timeout = setTimeout(type, 35 + Math.random() * 28);
     } else {
-      // عند الانتهاء من الكتابة
+      // انتهت الكتابة – إخفاء المؤشر فقط (الألوان موجودة مسبقاً)
       initTerminalTyping._timeout = null;
-      // التأكد من أن HTML النهائي مطابق للكامل (لا حاجة لإعادة بناء، هو نفسه)
-      // إخفاء المؤشر
       const cursor = document.querySelector('.cursor');
       if (cursor) cursor.style.display = 'none';
     }
