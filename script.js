@@ -280,38 +280,66 @@ function navigateToDownload(appId) {
 // الطرفية (Typing Effect)
 // ============================================================
 function initTerminalTyping() {
-  const line1 = document.getElementById('typedLine1');
-  if (!line1) return;
-  line1.textContent = '';
-
-  const text =
-    currentLang === 'ar'
-      ? 'تهيئة الاتصال الآمن... التحقق من الهوية...'
-      : 'Establishing secure connection... verifying identity...';
-
-  let i = 0;
-
-  function type() {
-    if (i < text.length) {
-      line1.textContent += text.charAt(i);
-      i++;
-      setTimeout(type, 35 + Math.random() * 28);
-    } else {
-      setTimeout(() => {
-        const l2 = document.getElementById('line2');
-        if (l2) l2.style.opacity = '1';
-      }, 250);
-
-      setTimeout(() => {
-        const l3 = document.getElementById('line3');
-        if (l3) l3.style.opacity = '1';
-        const cursor = document.querySelector('.cursor');
-        if (cursor) cursor.style.display = 'none';
-      }, 650);
-    }
+  // إلغاء أي جلسة كتابة سابقة لتجنب التداخل
+  if (initTerminalTyping._timeout) {
+    clearTimeout(initTerminalTyping._timeout);
+    initTerminalTyping._timeout = null;
   }
 
-  setTimeout(type, 500);
+  const line1 = document.getElementById('typedLine1');
+  if (!line1) return;
+  line1.textContent = ''; // نبدأ بفارغ
+
+  // النص الكامل حسب اللغة
+  const text = currentLang === 'ar'
+    ? 'تهيئة الاتصال الآمن... التحقق من الهوية...'
+    : 'Establishing secure connection... verifying identity...';
+
+  // تحديد الأجزاء التي ستظهر باللون الأخضر (فهارس البداية والنهاية حصرية)
+  const greenSegments = currentLang === 'ar'
+    ? [
+        { start: 0, end: 19, green: true },   // "تهيئة الاتصال الآمن"
+        { start: 19, end: 23, green: false }, // "... " (ثلاث نقاط ومسافة)
+        { start: 23, end: 39, green: true },  // "التحقق من الهوية"
+        { start: 39, end: 42, green: false }  // "..."
+      ]
+    : [
+        { start: 0, end: 30, green: true },   // "Establishing secure connection"
+        { start: 30, end: 34, green: false }, // "... "
+        { start: 34, end: 52, green: true },  // "verifying identity"
+        { start: 52, end: 55, green: false }  // "..."
+      ];
+
+  let i = 0;
+  const type = () => {
+    if (i < text.length) {
+      i++;
+      // بناء HTML التراكمي مع تلوين الكلمات المحددة فقط
+      let html = '';
+      for (const seg of greenSegments) {
+        if (seg.start >= i) break;                // ما وصلنا لهذا الجزء بعد
+        const partEnd = Math.min(seg.end, i);     // نهاية الجزء المطبوع حتى الآن
+        const part = text.substring(seg.start, partEnd);
+        if (seg.green) {
+          html += `<span style="color: green;">${part}</span>`;
+        } else {
+          html += part; // النقاط والمسافات تبقى بلونها الافتراضي
+        }
+      }
+      line1.innerHTML = html; // عرض النص الملون
+      
+      initTerminalTyping._timeout = setTimeout(type, 35 + Math.random() * 28);
+    } else {
+      // عند الانتهاء من الكتابة
+      initTerminalTyping._timeout = null;
+      // التأكد من أن HTML النهائي مطابق للكامل (لا حاجة لإعادة بناء، هو نفسه)
+      // إخفاء المؤشر
+      const cursor = document.querySelector('.cursor');
+      if (cursor) cursor.style.display = 'none';
+    }
+  };
+
+  initTerminalTyping._timeout = setTimeout(type, 500);
 }
 // ============================================================
 // البحث والتصفية
