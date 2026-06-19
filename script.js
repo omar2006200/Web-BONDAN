@@ -1,6 +1,6 @@
 // ============================================================
 // script.js  –  DR BONDAN  |  نظام متعدد الصفحات (SPA)
-// دعم ثنائي اللغة (العربية / الإنجليزية) – لا يدعم النسخ أبداً
+// دعم ثنائي اللغة (العربية / الإنجليزية) – تحسينات أداء وإعلانات
 // ============================================================
 
 // ========== قواميس الترجمة ==========
@@ -74,9 +74,9 @@ const translations = {
 };
 
 // ========== الإعدادات العامة ==========
-let currentLang = 'ar'; // اللغة الافتراضية العربية
+let currentLang = 'ar';
 
-// ========== بيانات التطبيقات (مع روابط الصور) ==========
+// ========== بيانات التطبيقات ==========
 const appConfig = [
     {
         id: 1,
@@ -99,8 +99,8 @@ const appConfig = [
         downloadLinks: [
             { label:'كورية', url:'https://example.com/dl/dr-bondan-tool-pro-v3.2.1.zip', speed:'⚡ فائقة', location:'🇩🇪 Frankfurt', recommended:true, hash:'MD5: a1b2c3...', image:'https://dr-app-an56.onrender.com/image/apk.jpg' },
             { label:'ملف كورية', url:'https://mirror2.example.com/dl/dr-bondan-tool-pro-v3.2.1.zip', speed:'🚀 عالية', location:'🇺🇸 New York', recommended:false, hash:'SHA256: 7f8e...', image:'https://dr-app-an56.onrender.com/image/obb.jpg' },
-            { label:'تايوانيه', url:'https://mirror2.example.com/dl/dr-bondan-tool-pro-v3.2.1.zip', speed:'🛡️ آمن', location:'🇸🇬 Singapore', recommended:false, hash:'SHA1: 3f4e...', image:'https://dr-app-an56.onrender.com/image/apk.jpg' },  // صورة فارغة = سيستخدم الإيموجي
-            { label:'ملف تايوانيه', url:'https://mirror2.example.com/dl/dr-bondan-tool-pro-v3.2.1.zip', speed:'🛡️ آمن', location:'🇸🇬 Singapore', recommended:false, hash:'SHA1: 3f4e...', image:'https://dr-app-an56.onrender.com/image/obb.jpg' } // تكرار نفس الصورة
+            { label:'تايوانيه', url:'https://mirror2.example.com/dl/dr-bondan-tool-pro-v3.2.1.zip', speed:'🛡️ آمن', location:'🇸🇬 Singapore', recommended:false, hash:'SHA1: 3f4e...', image:'https://dr-app-an56.onrender.com/image/apk.jpg' },
+            { label:'ملف تايوانيه', url:'https://mirror2.example.com/dl/dr-bondan-tool-pro-v3.2.1.zip', speed:'🛡️ آمن', location:'🇸🇬 Singapore', recommended:false, hash:'SHA1: 3f4e...', image:'https://dr-app-an56.onrender.com/image/obb.jpg' }
         ]
     },
     {
@@ -116,7 +116,7 @@ const appConfig = [
         requirements: { ar: 'Windows 10+ | RAM 8GB | مساحة 500MB', en: 'Windows 10+ | RAM 8GB | Space 500MB' },
         rating: '4.7',
         downloadLinks: [
-            { label:'الخادم الرئيسي', url:'https://example.com/dl/shadow-scanner-x.zip', speed:'⚡ فائقة', location:'🇩🇪 Frankfurt', recommended:true, hash:'MD5: f1e2...' },  // بدون صورة = أيقونة افتراضية
+            { label:'الخادم الرئيسي', url:'https://example.com/dl/shadow-scanner-x.zip', speed:'⚡ فائقة', location:'🇩🇪 Frankfurt', recommended:true, hash:'MD5: f1e2...' },
             { label:'الرابط البديل 2', url:'https://mirror2.example.com/dl/shadow-scanner-x.zip', speed:'🚀 عالية', location:'🇺🇸 New York', recommended:false, hash:'SHA256: 9a8b...' }
         ]
     }
@@ -129,17 +129,53 @@ window.addEventListener('load', () => {
     setTimeout(() => {
         document.getElementById('preloader').classList.add('hidden');
     }, 600);
+    initAdLoading(); // مراقبة الإعلانات
 });
 
 // ============================================================
-// Particles Canvas
+// تحميل الإعلانات كسولاً
+// ============================================================
+function initAdLoading() {
+    if (!('IntersectionObserver' in window)) return;
+    const adContainers = document.querySelectorAll('.ad-container:not(:empty)');
+    if (adContainers.length === 0) return;
+
+    let adScriptLoaded = false;
+    const loadAdScript = () => {
+        if (adScriptLoaded) return;
+        const script = document.createElement('script');
+        script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
+        script.async = true;
+        script.crossOrigin = 'anonymous';
+        document.head.appendChild(script);
+        adScriptLoaded = true;
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                loadAdScript();
+                if (entry.target.querySelector('.adsbygoogle')) {
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                }
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { rootMargin: '200px' });
+
+    adContainers.forEach(container => observer.observe(container));
+}
+
+// ============================================================
+// Particles Canvas (عدد جسيمات أقل)
 // ============================================================
 (function initParticles() {
     const canvas = document.getElementById('particleCanvas');
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
     let width, height;
     const particles = [];
-    const maxParticles = 65;
+    const maxParticles = 55; // مخفف لتحسين الأداء
 
     function resizeCanvas() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
     resizeCanvas();
@@ -150,12 +186,12 @@ window.addEventListener('load', () => {
         reset(initial = false) {
             this.x = Math.random() * width;
             this.y = initial ? Math.random() * height : height + 10;
-            this.size = Math.random() * 2 + 0.4;
-            this.speedY = -(Math.random() * 0.55 + 0.15);
-            this.speedX = (Math.random() - 0.5) * 0.25;
-            this.opacity = Math.random() * 0.55 + 0.15;
+            this.size = Math.random() * 1.8 + 0.3;
+            this.speedY = -(Math.random() * 0.5 + 0.1);
+            this.speedX = (Math.random() - 0.5) * 0.2;
+            this.opacity = Math.random() * 0.5 + 0.1;
             this.life = 1;
-            this.decay = Math.random() * 0.0025 + 0.0008;
+            this.decay = Math.random() * 0.002 + 0.0008;
         }
         update() {
             this.y += this.speedY; this.x += this.speedX; this.life -= this.decay;
@@ -277,12 +313,9 @@ function navigateToDownload(appId) {
 }
 
 // ============================================================
-// الطرفية (Typing Effect)
+// الطرفية (Typing Effect) – أسرع قليلاً
 // ============================================================
 function initTerminalTyping() {
-  // إلغاء أي جلسة كتابة سابقة لتجنب التداخل
-function initTerminalTyping() {
-  // إلغاء أي جلسة كتابة سابقة
   if (initTerminalTyping._timeout) {
     clearTimeout(initTerminalTyping._timeout);
     initTerminalTyping._timeout = null;
@@ -290,55 +323,47 @@ function initTerminalTyping() {
 
   const line1 = document.getElementById('typedLine1');
   if (!line1) return;
-  line1.textContent = ''; // تفريغ السطر
+  line1.textContent = '';
 
-  // اختر النص حسب اللغة
   const text = currentLang === 'ar'
     ? 'DR → تطبيقات معدلة بشكل احترافي وآمن ومحسّنة الأداء | الحالة: تم التحقق منها وآمنة 🔒'
     : 'DR → Secure, optimized, and professionally modified applications | Status: VERIFIED & SAFE 🔒';
 
-  // تحويل النص إلى مصفوفة من الأحرف الحقيقية (بما فيها الإيموجي كعنصر واحد)
   const chars = Array.from(text);
 
-  // تعريف أجزاء التلوين (segments) حسب اللغة – بالفهارس داخل chars
   const segments = currentLang === 'ar'
     ? [
-        { start: 0,  end: 5,  color: '#00e5ff' },  // "DR → "
-        { start: 51, end: 54, color: '#888888' },  // " | "  (فاصل)
-        { start: 54, end: 61, color: '#888888' },  // "الحالة:"
-        { start: 62, end: 82, color: '#00ff88' },  // "تم التحقق منها وآمنة"
-        { start: 82, end: 84, color: '#00ff88' }   // " 🔒" (مسافة + إيموجي)
+        { start: 0,  end: 5,  color: '#00e5ff' },
+        { start: 51, end: 54, color: '#888888' },
+        { start: 54, end: 61, color: '#888888' },
+        { start: 62, end: 82, color: '#00ff88' },
+        { start: 82, end: 84, color: '#00ff88' }
       ]
     : [
-        { start: 0,  end: 5,  color: '#00e5ff' },  // "DR → "
-        { start: 61, end: 64, color: '#888888' },  // " | "  (فاصل)
-        { start: 64, end: 71, color: '#888888' },  // "Status:"
-        { start: 72, end: 87, color: '#00ff88' },  // "VERIFIED & SAFE"
-        { start: 87, end: 89, color: '#00ff88' }   // " 🔒" (مسافة + إيموجي)
+        { start: 0,  end: 5,  color: '#00e5ff' },
+        { start: 61, end: 64, color: '#888888' },
+        { start: 64, end: 71, color: '#888888' },
+        { start: 72, end: 87, color: '#00ff88' },
+        { start: 87, end: 89, color: '#00ff88' }
       ];
 
-  let i = 0; // عداد الأحرف المطبوعة
+  let i = 0;
 
-  // دالة مساعدة: تولّد HTML ملوناً حتى المؤشر i
   const buildHTML = (upto) => {
     let html = '';
     let idx = 0;
-    // التأكد من ترتيب segments تصاعدياً
     const sorted = [...segments].sort((a, b) => a.start - b.start);
     for (const seg of sorted) {
       if (seg.start >= upto) break;
-      // إضافة النص غير الملون قبل هذا الجزء
       if (idx < seg.start) {
         html += chars.slice(idx, Math.min(seg.start, upto)).join('');
       }
-      // إضافة الجزء الملون
       const segEnd = Math.min(seg.end, upto);
       if (seg.start < segEnd) {
         html += `<span style="color:${seg.color}">${chars.slice(seg.start, segEnd).join('')}</span>`;
       }
       idx = seg.end;
     }
-    // إضافة أي نص متبقٍّ بعد آخر segment
     if (idx < upto) {
       html += chars.slice(idx, upto).join('');
     }
@@ -348,18 +373,18 @@ function initTerminalTyping() {
   const type = () => {
     if (i < chars.length) {
       i++;
-      line1.innerHTML = buildHTML(i); // عرض النص الملون تراكمياً
-      initTerminalTyping._timeout = setTimeout(type, 35 + Math.random() * 28);
+      line1.innerHTML = buildHTML(i);
+      initTerminalTyping._timeout = setTimeout(type, 25 + Math.random() * 15); // أسرع
     } else {
-      // انتهت الكتابة – إخفاء المؤشر فقط (الألوان موجودة مسبقاً)
       initTerminalTyping._timeout = null;
       const cursor = document.querySelector('.cursor');
       if (cursor) cursor.style.display = 'none';
     }
   };
 
-  initTerminalTyping._timeout = setTimeout(type, 500);
+  initTerminalTyping._timeout = setTimeout(type, 400);
 }
+
 // ============================================================
 // البحث والتصفية
 // ============================================================
@@ -399,7 +424,7 @@ function renderAppCards() {
         const card = document.createElement('div');
         card.className = 'app-card';
         card.innerHTML = `
-            <img src="${app.imageUrl}" alt="${app.name}" class="app-card-image" loading="lazy" onerror="this.style.background='#111';">
+            <img src="${app.imageUrl}" alt="${app.name}" class="app-card-image" loading="lazy" decoding="async" onerror="this.style.background='#111';">
             <div class="app-card-body">
                 <span class="status-badge verified">${translations[currentLang].verified_badge}</span>
                 <h3 class="app-card-name">${app.name}</h3>
@@ -434,7 +459,7 @@ function renderDetailPage(app) {
     container.innerHTML = `
         <button class="btn-back" onclick="navigateToHome()">${translations[currentLang].back_to_list}</button>
         <div class="detail-hero">
-            <div class="detail-image-wrapper"><img src="${app.imageUrl}" alt="${app.name}" class="detail-image" onerror="this.style.background='#111';"></div>
+            <div class="detail-image-wrapper"><img src="${app.imageUrl}" alt="${app.name}" class="detail-image" loading="lazy" decoding="async" onerror="this.style.background='#111';"></div>
             <div class="detail-info">
                 <span class="status-badge verified">${translations[currentLang].verified_badge}</span>
                 <h2 class="detail-app-name">${app.name}</h2>
@@ -460,7 +485,7 @@ function renderDetailPage(app) {
 }
 
 // ============================================================
-// صفحة التحميل (مع دعم صور السيرفر المخصصة)
+// صفحة التحميل
 // ============================================================
 function renderDownloadPage(app) {
     const container = document.getElementById('downloadPageContainer');
@@ -469,7 +494,7 @@ function renderDownloadPage(app) {
     container.innerHTML = `
         <button class="btn-back" onclick="navigateToDetail(${app.id})">${translations[currentLang].back_to_list}</button>
         <div class="download-summary">
-            <img src="${app.imageUrl}" alt="${app.name}" class="download-summary-img" onerror="this.style.background='#111';">
+            <img src="${app.imageUrl}" alt="${app.name}" class="download-summary-img" loading="lazy" decoding="async" onerror="this.style.background='#111';">
             <div class="download-summary-info">
                 <h3>${app.name}</h3>
                 <p>📦 ${app.version} | 💾 ${app.size} | ⭐ ${app.rating}</p>
@@ -492,10 +517,8 @@ function renderDownloadPage(app) {
     app.downloadLinks.forEach((link, idx) => {
         const card = document.createElement('div');
         card.className = `server-card ${link.recommended ? 'recommended' : ''}`;
-
-        // إذا وُجد رابط صورة مخصص نعرضها، وإلا نعرض الإيموجي القديم
         const iconHTML = link.image
-            ? `<img src="${link.image}" alt="${link.label}" class="server-img" />`
+            ? `<img src="${link.image}" alt="${link.label}" class="server-img" loading="lazy" decoding="async" />`
             : `<span class="server-icon">${idx === 0 ? '🖥️' : idx === 1 ? '🌐' : '☁️'}</span>`;
 
         card.innerHTML = `
