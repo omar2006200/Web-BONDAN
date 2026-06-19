@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <!-- تحسين التحميل المبدئي للخط الأساسي -->
+    <link rel="preload" as="font" href="https://fonts.gstatic.com/s/cairo/v20/...woff2" crossorigin>
 </head>
 <body>
     <div id="preloader">
@@ -38,6 +40,13 @@
                 <a href="#home" class="crumb-link">🏠 <span data-lang="home_crumb">الرئيسية</span></a>
             </nav>
         </header>
+
+        <!-- 📢 إعلان ليدربورد أعلى المحتوى (728×90) -->
+        <div class="ad-container ad-leaderboard">
+            <!-- أضف كود الإعلان هنا، مثال Google AdSense -->
+            <!-- <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-XXXXXX" data-ad-slot="123456"></ins> -->
+        </div>
+
         <div class="page-view active" id="page-home">
             <section class="terminal-section">
                 <div class="terminal-header">
@@ -59,24 +68,42 @@
                     <option value="size" data-lang="sort_size">الحجم (تصاعدي)</option>
                 </select>
             </div>
+
+            <!-- 📢 إعلان مستطيل كبير قبل التطبيقات (300×250) -->
+            <div class="ad-container ad-rectangle">
+                <!-- أضف كود الإعلان هنا -->
+                <!-- <ins class="adsbygoogle" style="display:inline-block;width:300px;height:250px" data-ad-client="ca-pub-XXXXXX" data-ad-slot="123456"></ins> -->
+            </div>
+
             <section class="apps-section">
                 <h2 class="section-title"><span class="bracket">[</span> <span data-lang="apps_section_title">التطبيقات المتاحة</span> <span class="bracket">]</span></h2>
                 <div class="apps-grid" id="appsGrid"></div>
                 <div class="no-results" id="noResults" style="display:none;" data-lang="no_results">⚠️ لا توجد تطبيقات مطابقة لبحثك.</div>
             </section>
         </div>
+
         <div class="page-view" id="page-detail">
             <div class="detail-container" id="detailContainer"></div>
+            <!-- 📢 إعلان ليدربورد في صفحة التفاصيل -->
+            <div class="ad-container ad-leaderboard" style="margin-top:30px;">
+                <!-- أضف كود الإعلان -->
+            </div>
         </div>
+
         <div class="page-view" id="page-download">
             <div class="download-page-container" id="downloadPageContainer"></div>
+            <!-- 📢 إعلان مستطيل كبير فوق الخوادم -->
+            <div class="ad-container ad-rectangle" style="margin:30px auto;">
+                <!-- أضف كود الإعلان -->
+            </div>
         </div>
+
         <footer class="footer">
             <p>© <span id="year"></span> DR BONDAN. <span data-lang="footer_rights">جميع الحقوق محفوظة.</span></p>
             <p class="footer-sub" data-lang="footer_sub">لا يُسمح بإعادة التوزيع دون إذن // SECURE LINE // ALL RIGHTS RESERVED</p>
         </footer>
     </div>
     <div id="toast" class="toast" data-lang="toast_default">تم بنجاح</div>
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
 </body>
 </html>
